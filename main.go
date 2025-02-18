@@ -1,13 +1,17 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"os"
 
+	_ "github.com/lib/pq"
 	"github.com/tumpech/gator/internal/config"
+	"github.com/tumpech/gator/internal/database"
 )
 
 type state struct {
+	db  *database.Queries
 	cfg *config.Config
 }
 
@@ -18,8 +22,15 @@ func main() {
 	}
 
 	programState := &state{cfg: &cfg}
+	db, err := sql.Open("postgres", programState.cfg.DbURL)
+	if err != nil {
+		log.Fatalf("error connecting to db: %s", err)
+	}
+	dbQueries := database.New(db)
+	programState.db = dbQueries
 	cmds := NewCommands()
 	cmds.register("login", handlerLogin)
+	cmds.register("register", handlerRegister)
 
 	programArgs := os.Args
 	if len(programArgs) < 2 {
@@ -30,5 +41,6 @@ func main() {
 	err = cmds.run(programState, cmd)
 	if err != nil {
 		log.Fatalf("error executing command: %v", err)
+		os.Exit(1)
 	}
 }
