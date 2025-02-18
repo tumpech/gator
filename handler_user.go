@@ -56,3 +56,13 @@ func handlerLogin(s *state, cmd command) error {
 	fmt.Printf("User is set to %s\n", username)
 	return nil
 }
+
+func handlerReset(s *state, cmd command) error {
+	err := s.db.ResetUsers(context.Background())
+	if err != nil {
+		return fmt.Errorf("couldn't reset users: %w", err)
+	}
+
+	fmt.Println("Users table is reset.")
+	return nil
+}
