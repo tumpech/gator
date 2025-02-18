@@ -1,27 +1,34 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"os"
 
 	"github.com/tumpech/gator/internal/config"
 )
+
+type state struct {
+	cfg *config.Config
+}
 
 func main() {
 	cfg, err := config.Read()
 	if err != nil {
 		log.Fatalf("error reading config: %v", err)
 	}
-	fmt.Printf("Read config:%+v\n", cfg)
-	err = cfg.SetUser("lane")
-	if err != nil {
-		log.Fatalf("error setting user: %v", err)
-	}
-	fmt.Printf("Changed user to lane: %+v\n", cfg)
 
-	cfg, err = config.Read()
-	if err != nil {
-		log.Fatalf("error reading config: %v", err)
+	programState := &state{cfg: &cfg}
+	cmds := NewCommands()
+	cmds.register("login", handlerLogin)
+
+	programArgs := os.Args
+	if len(programArgs) < 2 {
+		log.Fatal("there must be a command")
 	}
-	fmt.Printf("Read config again: %+v\n", cfg)
+	cmd := command{programArgs[1], programArgs[2:]}
+
+	err = cmds.run(programState, cmd)
+	if err != nil {
+		log.Fatalf("error executing command: %v", err)
+	}
 }
