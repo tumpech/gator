@@ -33,6 +33,7 @@ func main() {
 	cmds.register("register", handlerRegister)
 	cmds.register("reset", handlerReset)
 	cmds.register("users", handlerUsers)
+	cmds.register("agg", handlerAgg)
 
 	programArgs := os.Args
 	if len(programArgs) < 2 {
@@ -43,6 +44,5 @@ func main() {
 	err = cmds.run(programState, cmd)
 	if err != nil {
 		log.Fatalf("error executing command: %v", err)
-		os.Exit(1)
 	}
 }
