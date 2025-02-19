@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/tumpech/gator/internal/database"
 )
 
@@ -29,7 +28,6 @@ func handlerAddFeed(s *state, cmd command) error {
 	}
 
 	arg := database.CreateFeedParams{
-		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		Name:      cmd.Args[0],

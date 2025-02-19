@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/tumpech/gator/internal/database"
 )
 
@@ -21,7 +20,6 @@ func handlerRegister(s *state, cmd command) error {
 
 	username := cmd.Args[0]
 	arg := database.CreateUserParams{
-		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		Name:      username}
