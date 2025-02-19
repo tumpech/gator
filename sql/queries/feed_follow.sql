@@ -24,3 +24,9 @@ ON ff.feed_id = f.id
 INNER JOIN users u
 ON ff.user_id = u.id
 WHERE u.name = $1;
+
+-- name: DeleteFeedFolow :exec
+DELETE
+FROM feed_follow ff
+USING feeds f, users u
+WHERE u.id = ff.user_id AND f.id = ff.feed_id AND u.name = sqlc.arg(user_name) AND f.url = sqlc.arg(feed_url);
